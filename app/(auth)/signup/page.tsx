@@ -1,15 +1,29 @@
 'use client'
 
-import { Button, Input } from '@nextui-org/react'
+import { SignupMutation } from '@/gql/gqlSignupMutation'
+import { setToken } from '@/utils/token'
+import { Button, input, Input } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useMutation } from 'urql'
 
 const SignupPage = () => {
   const [state, setState] = useState({ password: '', email: '' })
   const router = useRouter()
-
-  const handleSignup = async (e) => {
+  // you need to tell them when they should be run. Mutations have to be triggered by some functions
+  //by default queries run when the component is rendered.
+  const [signUpResult, signup] = useMutation(SignupMutation)
+  const handleSignup = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
+    //remember this object should have what the mutation has as param name
+    //state is an object that has the same values we need to run the SignUp - createUser
+    const result = await signup({ input: state })
+    // All the request give you a status code 200
+    //So... result status code will be 2000
+    if (result.data.createUser) {
+      setToken(result.data.createUser.token)
+      router.push('/')
+    }
   }
 
   return (
