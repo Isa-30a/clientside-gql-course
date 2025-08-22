@@ -37,13 +37,12 @@ const IssuesPage = () => {
     }
     if (result.data) {
       //the replay function is for reexecuteQuery
-      await replay()
+      await replay({ requestPolicy: 'network-only' })
       close()
       setIssueName('')
       setIssueDescription('')
     }
   }
-
   return (
     <div>
       <PageHeader title="All issues">
@@ -61,7 +60,12 @@ const IssuesPage = () => {
       {data &&
         data.issues.map((issue) => (
           <div key={issue.id}>
-            <Issue issue={issue} />
+            <Issue
+              issue={issue}
+              updateFn={async () =>
+                await replay({ requestPolicy: 'network-only' })
+              }
+            />{' '}
           </div>
         ))}
       <Modal
