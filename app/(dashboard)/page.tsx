@@ -36,6 +36,8 @@ const IssuesPage = () => {
       console.error(result.error)
     }
     if (result.data) {
+      //the replay function is for reexecuteQuery
+      await replay()
       close()
       setIssueName('')
       setIssueDescription('')
