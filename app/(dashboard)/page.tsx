@@ -18,15 +18,14 @@ import {
 import { PlusIcon } from 'lucide-react'
 import Issue from '../_components/Issue'
 import { IssuesQuery } from '@/gql/issuesQuery'
-import { useQuery } from 'urql'
-
 
 const IssuesPage = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [issueName, setIssueName] = useState('')
   const [issueDescription, setIssueDescription] = useState('')
+  const [{ data, error, fetching }, replay] = useQuery({ query: IssuesQuery })
 
-  const onCreate = async (close) => {}
+  const onCreate = async (close: () => void) => {}
 
   return (
     <div>
@@ -40,13 +39,14 @@ const IssuesPage = () => {
           </button>
         </Tooltip>
       </PageHeader>
-
-      {[].map((issue) => (
-        <div key={issue.id}>
-          <Issue issue={issue} />
-        </div>
-      ))}
-
+      {fetching && <Spinner></Spinner>}
+      {error && <div>Error</div>}
+      {data &&
+        data.issues.map((issue) => (
+          <div key={issue.id}>
+            <Issue issue={issue} /> 
+          </div>
+        ))}
       <Modal
         size="2xl"
         isOpen={isOpen}
