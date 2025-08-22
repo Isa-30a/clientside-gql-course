@@ -17,6 +17,9 @@ import {
 } from '@nextui-org/react'
 import { PlusIcon } from 'lucide-react'
 import Issue from '../_components/Issue'
+import { IssuesQuery } from '@/gql/issuesQuery'
+import { useQuery } from 'urql'
+
 
 const IssuesPage = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
